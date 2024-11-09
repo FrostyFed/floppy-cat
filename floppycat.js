@@ -30,7 +30,7 @@ let bottomPipeImg;
 let velocityX = -2;
 let velocityY = 0;
 let gravity = 0.4;
-let gravityIncreaseRate = 0.001;
+let gravityIncreaseRate = 0.002;
 
 let gameOver = false;
 let score = 0;
@@ -85,7 +85,7 @@ function update() {
         deathSound.play();
     }
 
-    velocityX = -2 - (score * 0.04); // Increase pipe speed as score increases
+    velocityX = -2 - (score * 0.05); // Increase pipe speed as score increases
     if (velocityX < -8) {
         velocityX = -8; // Cap pipe speed to prevent it from getting too fast
     }
