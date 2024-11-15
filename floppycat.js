@@ -30,15 +30,16 @@ let bottomPipeImg;
 let velocityX = -2;
 let velocityY = 0;
 let gravity = 0.4;
-let gravityIncreaseRate = 0.002;
+let gravityIncreaseRate = 0.001; // increases fall speed
 
 let gameOver = false;
 let score = 0;
 
+// audio
 let jumpSound = new Audio('./jump.mp3');
 let scoreSound = new Audio('./score.mp3');
 let deathSound = new Audio('./death.mp3');
-let bgMusic = new Audio('./background.mp3'); // Path to your background music file
+let bgMusic = new Audio('./background.mp3');
 bgMusic.loop = true;
 let bgMusicPlayed = false;
 
@@ -61,7 +62,7 @@ window.onload = function() {
     bottomPipeImg = new Image();
     bottomPipeImg.src = "./bottomscratchpost.png"
 
-    requestAnimationFrame(update);
+  
     setInterval(placePipes, 1500);
     document.addEventListener("keydown", moveCat)
 
@@ -81,13 +82,13 @@ function update() {
     if (cat.y > board.height) {
         gameOver = true;
 
-        deathSound.currentTime = 0; // Reset sound
+        deathSound.currentTime = 0;
         deathSound.play();
     }
 
-    velocityX = -2 - (score * 0.05); // Increase pipe speed as score increases
+    velocityX = -2 - (score * 0.03); // increase pipe speed
     if (velocityX < -8) {
-        velocityX = -8; // Cap pipe speed to prevent it from getting too fast
+        velocityX = -8; 
     }
 
     for (let i = 0; i < pipeArray.length; i++) {
@@ -98,7 +99,7 @@ function update() {
         if (!pipe.passed && cat.x > pipe.x + pipe.width) {
             score += 0.5;
             
-            scoreSound.currentTime = 0; // Reset sound to the beginning
+            scoreSound.currentTime = 0;
             scoreSound.play();
 
 
@@ -108,7 +109,7 @@ function update() {
         if (detectCollision(cat, pipe)) {
             gameOver = true;
 
-            deathSound.currentTime = 0; // Reset sound to the beginning
+            deathSound.currentTime = 0;
             deathSound.play();
         }
     }
@@ -176,7 +177,13 @@ function placePipes() {
     pipeArray.push(bottomPipe);
 }
 
+let gameStarted = false
 function moveCat(e) {
+    if (!gameStarted) {
+        requestAnimationFrame(update)
+        gameStarted = true
+    }
+    
     if (e.code == "Space") {
         velocityY = -6;
 
@@ -187,7 +194,7 @@ function moveCat(e) {
             bgMusicPlayed = true;
         }
 
-        jumpSound.currentTime = .1; // Reset the sound to the start
+        jumpSound.currentTime = .1;
         jumpSound.play();
 
         if (gameOver) {
